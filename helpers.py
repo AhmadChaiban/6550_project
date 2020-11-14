@@ -1,7 +1,12 @@
+import cv2
 import scipy
 import subprocess
+import pandas as pd
+import numpy as np
+from scipy.io import wavfile
 from glob import glob as globlin
-
+import matplotlib.pyplot as plt
+import progressbar
 
 def number_of_real_speakers(main_path):
     folder_paths = globlin(main_path)
@@ -9,6 +14,7 @@ def number_of_real_speakers(main_path):
     for path in folder_paths:
         sum_files += len(globlin(path + '/*'))
     return sum_files
+
 
 def convert_files_to_wav(mp3_paths, dest_path):
     counter = 0
@@ -22,15 +28,36 @@ def convert_files_to_wav(mp3_paths, dest_path):
                 break
 
 
-def read_spectogram_from_audio(path):
-    pass
+def extract_spectrogram_from_audio(main_path, destination_path):
+    paths = globlin(main_path)
+    with progressbar.ProgressBar(max_value=len(paths)) as bar:
+        for index, path in enumerate(paths):
+            output_path = destination_path + path.split('/')[-1].replace('.wav','.jpg')
 
-def load_generated_audio(gen_data_annotations_df):
-    spectogram_files = []
-    for i in range(len(gen_data_annotations_df)):
-        path = gen_data_annotations_df['mr_link'].iloc[i].replace('{DS_PATH}', './Data')
-        spectogram_image = 0
-        spectogram_files.append()
-        
+            FS, data = wavfile.read(path)  # read wav file
+
+            fig,ax = plt.subplots(1)
+            fig.subplots_adjust(left=0,right=1,bottom=0,top=1)
+            ax.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
+            ax.axis('tight')
+            ax.axis('off')
+
+            plt.savefig(output_path)
+            plt.close()
+            bar.update(index)
+            
+            
+def load_images_as_dataframe(main_path, category_binary_value):
+    paths = globlin(main_path)
+    main_array = []
+    with progressbar.ProgressBar(max_value=len(paths)) as bar:
+        for index, path in enumerate(paths):
+            image = cv2.resize(cv2.imread(path), (224, 224))
+            im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            main_array.append([im_rgb, category_binary_value])
+
+            bar.update(index)
+            
+    return np.array(main_array)
     
         
