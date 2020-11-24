@@ -50,14 +50,16 @@ def extract_spectrogram_from_audio(main_path, destination_path):
 def load_images_as_dataframe(main_path, category_binary_value):
     paths = globlin(main_path)
     main_array = []
+    classes = []
     with progressbar.ProgressBar(max_value=len(paths)) as bar:
         for index, path in enumerate(paths):
             image = cv2.resize(cv2.imread(path), (224, 224))
             im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            main_array.append([im_rgb, category_binary_value])
+            main_array.append(im_rgb)
+            classes.append(category_binary_value)
 
             bar.update(index)
             
-    return np.array(main_array)
+    return np.array(main_array), np.array(classes)
     
         
