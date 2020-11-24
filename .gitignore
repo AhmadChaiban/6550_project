@@ -9,3 +9,5 @@ Data
 .idea/
 
 __pycache__/
+
+image_features.pickle
