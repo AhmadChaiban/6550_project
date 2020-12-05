@@ -1,3 +1,4 @@
+```python
 import cv2
 import scipy
 import subprocess
@@ -114,7 +115,6 @@ def oversample_load(image_references, class_references):
         if y_over[index] in class_references:
             original_classes.append(y_over[index])
     return np.array(original_images), np.array(original_classes)
-    
-    
+```
 
         
