@@ -11,3 +11,4 @@ Data
 __pycache__/
 
 image_features.pickle
+model.h5
