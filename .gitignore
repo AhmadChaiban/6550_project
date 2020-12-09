@@ -12,3 +12,7 @@ __pycache__/
 
 image_features.pickle
 model.h5
+
+raw_vids/
+
+Full vid.mp4
